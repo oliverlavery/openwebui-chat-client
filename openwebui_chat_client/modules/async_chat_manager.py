@@ -73,6 +73,50 @@ class AsyncChatManager:
             logger.error(f"❌ Failed to delete all chats: {e}")
             return False
 
+    async def delete_chat(self, chat_id: str) -> bool:
+        """
+        Delete a specific chat conversation asynchronously.
+
+        ⚠️ WARNING: This action CANNOT be undone!
+        The chat will be permanently deleted from the server.
+
+        Args:
+            chat_id: ID of the chat to delete
+
+        Returns:
+            True if deletion was successful, False otherwise
+
+        Example:
+            ```python
+            # ⚠️ WARNING: This will permanently delete the chat!
+            success = await client.delete_chat("chat-uuid-123")
+            if success:
+                print("Chat deleted successfully")
+            ```
+        """
+        if not chat_id:
+            logger.error("❌ Cannot delete chat: chat_id is empty")
+            return False
+
+        logger.warning(f"⚠️ DELETING chat {chat_id} - This action cannot be undone!")
+
+        try:
+            response = await self.base_client._make_request(
+                "DELETE", f"/api/v1/chats/{chat_id}", timeout=30
+            )
+
+            if response and response.status_code == 200:
+                logger.info(f"✅ Successfully deleted chat: {chat_id}")
+                return True
+            else:
+                logger.error(
+                    f"❌ Failed to delete chat: {response.status_code if response else 'No response'}"
+                )
+                return False
+        except Exception as e:
+            logger.error(f"❌ Failed to delete chat {chat_id}: {e}")
+            return False
+
     async def chat(
         self,
         question: str,

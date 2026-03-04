@@ -1089,6 +1089,45 @@ class ChatManager:
             logger.error(f"❌ Failed to delete all chats: {e}")
             return False
 
+    def delete_chat(self, chat_id: str) -> bool:
+        """
+        Delete a specific chat conversation.
+
+        ⚠️ WARNING: This action CANNOT be undone!
+        The chat will be permanently deleted from the server.
+
+        Args:
+            chat_id: ID of the chat to delete
+
+        Returns:
+            True if deletion was successful, False otherwise
+
+        Example:
+            ```python
+            # ⚠️ WARNING: This will permanently delete the chat!
+            success = client.delete_chat("chat-uuid-123")
+            if success:
+                print("Chat deleted successfully")
+            ```
+        """
+        if not chat_id:
+            logger.error("❌ Cannot delete chat: chat_id is empty")
+            return False
+
+        logger.warning(f"⚠️ DELETING chat {chat_id} - This action cannot be undone!")
+        url = f"{self.base_client.base_url}/api/v1/chats/{chat_id}"
+
+        try:
+            response = self.base_client.session.delete(
+                url, headers=self.base_client.json_headers
+            )
+            response.raise_for_status()
+            logger.info(f"✅ Successfully deleted chat: {chat_id}")
+            return True
+        except requests.exceptions.RequestException as e:
+            logger.error(f"❌ Failed to delete chat {chat_id}: {e}")
+            return False
+
     def create_folder(self, name: str) -> Optional[str]:
         """
         Create a new folder for organizing chats.

@@ -699,6 +699,29 @@ class OpenWebUIClient:
         """
         return self._chat_manager.delete_all_chats()
 
+    def delete_chat(self, chat_id: str) -> bool:
+        """
+        Delete a specific chat conversation.
+
+        ⚠️ WARNING: This action CANNOT be undone!
+        The chat will be permanently deleted from the server.
+
+        Args:
+            chat_id: ID of the chat to delete
+
+        Returns:
+            True if deletion was successful, False otherwise
+
+        Example:
+            ```python
+            # ⚠️ WARNING: This will permanently delete the chat!
+            success = client.delete_chat("chat-uuid-123")
+            if success:
+                print("Chat deleted successfully")
+            ```
+        """
+        return self._chat_manager.delete_chat(chat_id)
+
     def create_folder(self, name: str) -> Optional[str]:
         """Create a new folder for organizing chats."""
         return self._chat_manager.create_folder(name)
