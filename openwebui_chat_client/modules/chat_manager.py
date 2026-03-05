@@ -1002,6 +1002,31 @@ class ChatManager:
             logger.error(f"Failed to fetch chat list: {e}")
             return None
 
+    def get_chat_by_id(self, chat_id: str) -> Optional[Dict[str, Any]]:
+        """
+        Get a specific chat by ID with full message history.
+
+        Args:
+            chat_id: UUID of the chat to retrieve
+
+        Returns:
+            Dictionary containing chat data including messages, or None if failed
+        """
+        logger.info(f"Fetching chat by ID: {chat_id}")
+        url = f"{self.base_client.base_url}/api/v1/chats/{chat_id}"
+
+        try:
+            response = self.base_client.session.get(
+                url, headers=self.base_client.json_headers
+            )
+            response.raise_for_status()
+            chat_data = response.json()
+            logger.info(f"Successfully retrieved chat: {chat_id}")
+            return chat_data
+        except requests.exceptions.RequestException as e:
+            logger.error(f"Failed to fetch chat {chat_id}: {e}")
+            return None
+
     def get_chats_by_folder(self, folder_id: str) -> Optional[List[Dict[str, Any]]]:
         """
         Get all chats in a specific folder.

@@ -665,6 +665,10 @@ class OpenWebUIClient:
         """List all chats for the current user."""
         return self._chat_manager.list_chats(page)
 
+    def get_chat_by_id(self, chat_id: str) -> Optional[Dict[str, Any]]:
+        """Get a specific chat by ID with full message history."""
+        return self._chat_manager.get_chat_by_id(chat_id)
+
     def get_chats_by_folder(self, folder_id: str) -> Optional[List[Dict[str, Any]]]:
         """Get all chats in a specific folder."""
         return self._chat_manager.get_chats_by_folder(folder_id)
